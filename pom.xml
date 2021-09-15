@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.brandmaker.cs.skyhigh.tdb</groupId>
+    <artifactId>cross-charges</artifactId>
+    <version>1.0.0</version>
+    <name>cross-chargesr</name>
+    <packaging>war</packaging>
+    <description>TD Bank cross charges</description>
+
+    <properties>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <junit.version>5.7.0</junit.version>
+
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <failOnMissingWebXml>false</failOnMissingWebXml>
+
+        <version.javaee-api>7.0</version.javaee-api>
+        <version.commons-logging>1.1.3</version.commons-logging>
+        <version.commons-lang3>3.9</version.commons-lang3>
+
+        <version.jsch>0.1.55</version.jsch>
+        <version.guava>18.0</version.guava>
+        <version.opencsv>5.1</version.opencsv>
+        <version.gson>2.8.6</version.gson>
+
+        <!-- Jackson dependencies -->
+        <version.jackson>2.7.4</version.jackson>
+
+        <!-- RestEasy dependencies -->
+        <version.jboss-resteasy>3.0.19.Final</version.jboss-resteasy>
+
+        <!-- Brandmaker dependencies -->
+        <version.utils-common>2.0.0</version.utils-common>
+        <version.auth-api>2.30.38-6.9</version.auth-api>
+        <version.dse-external-api>2.4.44-6.8</version.dse-external-api>
+
+
+        <version.rest-client>6.1.0</version.rest-client>
+        <version.rest-service>10.1.0</version.rest-service>
+        <version.maps-rest-client>3.3.0</version.maps-rest-client>
+        <version.maps-jms-api>2.0-SNAPSHOT</version.maps-jms-api>
+        <version.json-jms-api>2.1.0</version.json-jms-api>
+        <version.ormlite>5.0</version.ormlite>
+        <version.mysql-connector-java>5.1.35</version.mysql-connector-java>
+
+        <version.javax-servlet-api>3.1.0</version.javax-servlet-api>
+
+        <!-- Junit dependencies -->
+        <version.junit>4.12</version.junit>
+    </properties>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>${version.javax-servlet-api}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax</groupId>
+            <artifactId>javaee-api</artifactId>
+            <version>${version.javaee-api}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.jcraft</groupId>
+            <artifactId>jsch</artifactId>
+            <version>${version.jsch}</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <version>${version.commons-logging}</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${version.commons-lang3}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${version.guava}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.opencsv</groupId>
+            <artifactId>opencsv</artifactId>
+            <version>${version.opencsv}</version>
+        </dependency>
+
+        <!-- Jackson dependencies -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>${version.jackson}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${version.jackson}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+            <version>${version.jackson}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.jaxrs</groupId>
+            <artifactId>jackson-jaxrs-json-provider</artifactId>
+            <version>${version.jackson}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jdk8</artifactId>
+            <version>${version.jackson}</version>
+        </dependency>
+
+
+        <!-- RestEasy dependencies -->
+        <dependency>
+            <groupId>org.jboss.resteasy</groupId>
+            <artifactId>resteasy-client</artifactId>
+            <version>${version.jboss-resteasy}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.resteasy</groupId>
+            <artifactId>resteasy-jackson2-provider</artifactId>
+            <version>${version.jboss-resteasy}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.j256.ormlite</groupId>
+            <artifactId>ormlite-jdbc</artifactId>
+            <version>${version.ormlite}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>${version.mysql-connector-java}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>${version.gson}</version>
+        </dependency>
+
+        <!-- Junit dependencies -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${version.junit}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <distributionManagement>
+        <repository>
+            <id>brandmaker-release-repository</id>
+            <uniqueVersion>false</uniqueVersion>
+            <url>https://nexus.brandmaker.com/content/repositories/releases</url>
+        </repository>
+        <snapshotRepository>
+            <id>brandmaker-snapshot-repository</id>
+            <uniqueVersion>true</uniqueVersion>
+            <url>https://nexus.brandmaker.com/content/repositories/snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+</project>
