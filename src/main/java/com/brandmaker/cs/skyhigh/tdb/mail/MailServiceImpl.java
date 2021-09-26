@@ -31,10 +31,11 @@ public class MailServiceImpl implements MailService {
      * @param mimeBodyPart mimeBodyPart to attach in mail
      * @return status
      */
-    private boolean sendMail(String subject, String bodyMessage, List<MimeBodyPart> mimeBodyPart) {
+    public boolean sendMail(String subject, String bodyMessage, List<MimeBodyPart> mimeBodyPart, String to) {
         InternetAddress[] recipients = null;
         try {
-            recipients = InternetAddress.parse(Globals.MAIL_RECIPIENTS());
+//            recipients = InternetAddress.parse(Globals.MAIL_RECIPIENTS());
+            recipients = InternetAddress.parse(to);
         } catch (AddressException e) {
             LOG.error(e.getMessage());
         }
@@ -99,7 +100,7 @@ public class MailServiceImpl implements MailService {
      * @return status
      */
     @Override
-    public boolean sendMailAttachmentFromString(String subject, String bodyMessage, String fileName, String attachment) {
+    public boolean sendMailAttachmentFromString(String subject, String bodyMessage, String fileName, String attachment, String to) {
 
 
         try {
@@ -115,7 +116,7 @@ public class MailServiceImpl implements MailService {
 
             mbp.add(attachmentPart);
 
-            return sendMail(subject, bodyMessage, mbp);
+            return sendMail(subject, bodyMessage, mbp, to);
         } catch (Exception e) {
             LOG.error(e.getMessage());
         }
@@ -146,7 +147,7 @@ public class MailServiceImpl implements MailService {
                 mbp.add(attachmentPart);
             }
 
-            return sendMail(subject, bodyMessage, mbp);
+            return sendMail(subject, bodyMessage, mbp, "");
         } catch (Exception e) {
             LOG.error(e.getMessage());
         }

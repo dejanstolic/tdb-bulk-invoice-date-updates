@@ -18,7 +18,7 @@ public interface MailService {
      *
      * @return status
      */
-    boolean sendMailAttachmentFromString(String subject, String bodyMessage, String fileName, String attachment);
+    boolean sendMailAttachmentFromString(String subject, String bodyMessage, String fileName, String attachment, String to);
 
     /**
      * Send mail with files
