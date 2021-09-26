@@ -1,6 +1,6 @@
 var oReq = new XMLHttpRequest();
 oReq.addEventListener("load", reqListener);
-oReq.open("GET", "/masonite-invoice-import/authorizeServlet");
+oReq.open("GET", "/tdb-cross-charges/authorizeServlet");
 oReq.send();
 
 function reqListener () {
