@@ -15,5 +15,16 @@
     <servlet-name>CrossChargesImportServlet</servlet-name>
     <url-pattern>/ccImportServlet</url-pattern>
   </servlet-mapping>
+  
+  <servlet>
+    <description></description>
+    <display-name>CrossChargesConfigServlet</display-name>
+    <servlet-name>CrossChargesConfigServlet</servlet-name>
+    <servlet-class>com.brandmaker.cs.skyhigh.tdb.servlets.ConfigServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>CrossChargesConfigServlet</servlet-name>
+    <url-pattern>/ccConfigServlet</url-pattern>
+  </servlet-mapping>
 
 </web-app>
