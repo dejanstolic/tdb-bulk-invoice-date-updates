@@ -3,55 +3,65 @@ package com.brandmaker.cs.skyhigh.tdb.dto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.opencsv.bean.CsvBindByPosition;
 
-import java.util.Date;
-
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CrossChargesDto {
 
-    @CsvBindByPosition(position = 0)
-    private String NameOfTheInvoice;
+    // Name Of The Invoice
+    @CsvBindByPosition(position = 0, required = true)
+    private String NameOfCharge;
 
-    @CsvBindByPosition(position = 1)
-    private String Comment;
+    // Description
+    @CsvBindByPosition(position = 1, required = true)
+    private String Description;
 
-    @CsvBindByPosition(position = 2)
+    // Amount
+    @CsvBindByPosition(position = 2, required = true)
     private Float Amount;
 
-    @CsvBindByPosition(position = 3)
+    // Currency
+    @CsvBindByPosition(position = 3, required = true)
     private String Currency;
 
-    @CsvBindByPosition(position = 4)
-    private Date PublishDate;
+    // Publish Date
+    @CsvBindByPosition(position = 4, required = true)
+    private String AccountingDate;
 
-    @CsvBindByPosition(position = 5)
-    private Date BookingDate;
+    // Booking Date
+    @CsvBindByPosition(position = 5, required = true)
+    private String TransactionDate;
 
-    @CsvBindByPosition(position = 6)
-    private String ReferenceNumber;
+    // Reference Number
+    @CsvBindByPosition(position = 6, required = true)
+    private String AccountingTransactionId;
 
-    @CsvBindByPosition(position = 7)
-    private String CostType;
+    // Cost Type
+    @CsvBindByPosition(position = 7, required = true)
+    private String CategoryCode;
 
-    @CsvBindByPosition(position = 8)
-    private String CostCenter;
+    // Cost Center
+    @CsvBindByPosition(position = 8, required = true)
+    private String CostCenterProjId;
 
-    @CsvBindByPosition(position = 9)
+    // BK-RC-GL
+    @CsvBindByPosition(position = 9, required = false)
     private String BkRcGl;
 
-    @CsvBindByPosition(position = 10)
-    private String ResponsiblePerson;
+    // Responsible Person
+    @CsvBindByPosition(position = 10, required = true)
+    private String CrossChargeState;
 
-    @CsvBindByPosition(position = 11)
+    // Element Id
+    @CsvBindByPosition(position = 11, required = true)
     private String ElementId;
 
 
-    public String getNameOfTheInvoice() {return NameOfTheInvoice;}
+    public String getNameOfCharge() {return NameOfCharge;}
 
-    public void setNameOfTheInvoice(String nameOfTheInvoice) {NameOfTheInvoice = nameOfTheInvoice;}
+    public void setNameOfCharge(String nameOfCharge) {NameOfCharge = nameOfCharge;}
 
-    public String getComment() {return Comment;}
+    public String getDescription() {return Description;}
 
-    public void setComment(String comment) {Comment = comment;}
+    public void setDescription(String description) {Description = description;}
 
     public Float getAmount() {return Amount;}
 
@@ -61,33 +71,33 @@ public class CrossChargesDto {
 
     public void setCurrency(String currency) {Currency = currency;}
 
-    public Date getPublishDate() {return PublishDate;}
+    public String getAccountingDate() {return AccountingDate;}
 
-    public void setPublishDate(Date publishDate) {PublishDate = publishDate;}
+    public void setAccountingDate(String accountingDate) {AccountingDate = accountingDate;}
 
-    public Date getBookingDate() {return BookingDate;}
+    public String getTransactionDate() {return TransactionDate;}
 
-    public void setBookingDate(Date bookingDate) {BookingDate = bookingDate;}
+    public void setTransactionDate(String transactionDate) {TransactionDate = transactionDate;}
 
-    public String getReferenceNumber() {return ReferenceNumber;}
+    public String getAccountingTransactionId() {return AccountingTransactionId;}
 
-    public void setReferenceNumber(String referenceNumber) {ReferenceNumber = referenceNumber;}
+    public void setAccountingTransactionId(String accountingTransactionId) {AccountingTransactionId = accountingTransactionId;}
 
-    public String getCostType() {return CostType;}
+    public String getCategoryCode() {return CategoryCode;}
 
-    public void setCostType(String costType) {CostType = costType;}
+    public void setCategoryCode(String categoryCode) {CategoryCode = categoryCode;}
 
-    public String getCostCenter() {return CostCenter;}
+    public String getCostCenterProjId() {return CostCenterProjId;}
 
-    public void setCostCenter(String costCenter) {CostCenter = costCenter;}
+    public void setCostCenterProjId(String costCenterProjId) {CostCenterProjId = costCenterProjId;}
 
     public String getBkRcGl() {return BkRcGl;}
 
     public void setBkRcGl(String bkRcGl) {BkRcGl = bkRcGl;}
 
-    public String getResponsiblePerson() {return ResponsiblePerson;}
+    public String getCrossChargeState() {return CrossChargeState;}
 
-    public void setResponsiblePerson(String responsiblePerson) {ResponsiblePerson = responsiblePerson;}
+    public void setCrossChargeState(String crossChargeState) {CrossChargeState = crossChargeState;}
 
     public String getElementId() {return ElementId;}
 
