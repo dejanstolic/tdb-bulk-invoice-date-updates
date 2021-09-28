@@ -1,116 +1,137 @@
 package com.brandmaker.cs.skyhigh.tdb.core;
 
-import com.brandmaker.cs.skyhigh.tdb.servlets.CrossChargesServlet;
+import com.brandmaker.cs.skyhigh.tdb.collection.CustomDataCollection;
+import com.brandmaker.cs.skyhigh.tdb.dto.CrossChargesDto;
+import com.brandmaker.cs.skyhigh.tdb.dto.ParseMessageDto;
+import com.brandmaker.cs.skyhigh.tdb.utils.Enumerations;
+import com.brandmaker.cs.skyhigh.tdb.utils.Utils;
+import com.google.common.io.ByteStreams;
+import com.opencsv.*;
+import com.opencsv.exceptions.CsvException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class ProcessCrossCharges {
 
     private static final Log LOG = LogFactory.getLog(ProcessCrossCharges.class);
-
-
-    public Boolean doProcess(InputStream file) {
-
-        boolean allGood = false;
-
-        List fileData = parseCsv(file, ',');
-
-        System.out.println(Arrays.toString(fileData.toArray()));
-
-//        try (InputStreamReader isr = new InputStreamReader(file,
-//                     StandardCharsets.UTF_8);
-//             BufferedReader br = new BufferedReader(isr)) {
-//
-//            br.lines().forEach(line -> System.out.println(line));
-//            allGood = true;
-//            LOG.info("Reading file good.");
-//        } catch (IOException e) {
-//            allGood = false;
-//            LOG.error("Reading file error: " + e.getMessage());
-//        }
-
-        return allGood;
-    }
+    public static List<Integer> rejectedList;
 
     /**
-     * CSV content parser. Convert an InputStream with the CSV contents to a two-dimensional List
-     * of Strings representing the rows and columns of the CSV. Each CSV record is expected to be
-     * separated by the specified CSV field separator.
-     * @param csvInput The InputStream with the CSV contents.
-     * @param csvSeparator The CSV field separator to be used.
-     * @return A two-dimensional List of Strings representing the rows and columns of the CSV.
+     * Processing a selected CSV file
+     * @param file
+     * @return Object[] - [0] - boolean - file format,
      */
-    public static List<List<String>> parseCsv(InputStream csvInput, char csvSeparator) {
+    public List doProcess(InputStream file) {
 
-        // Prepare.
-        BufferedReader csvReader = null;
-        List<List<String>> csvList = new ArrayList<List<String>>();
-        String csvRecord = null;
+        rejectedList = new ArrayList<>();
+        List response = new ArrayList();
+        boolean allGood = true;
 
-        // Process records.
         try {
-            csvReader = new BufferedReader(new InputStreamReader(csvInput, "UTF-8"));
-            while ((csvRecord = csvReader.readLine()) != null) {
-                csvList.add(parseCsvRecord(csvRecord, csvSeparator));
-            }
-        } catch (IOException e) {
-            throw new RuntimeException("Reading CSV failed.", e);
-        } finally {
-            if (csvReader != null)
-                try {
-                    csvReader.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
+            byte[] bytes = ByteStreams.toByteArray(file);
+
+            CSVParserBuilder csvParserBuilder = new CSVParserBuilder();
+            CSVParser parser = csvParserBuilder.withSeparator(',').build();
+            CSVReader reader = new CSVReaderBuilder(new InputStreamReader(new ByteArrayInputStream(bytes), StandardCharsets.UTF_8)).withCSVParser(parser)
+                    .build();
+
+            List<String[]> fData = reader.readAll();
+
+            // FILE FORMAT OK
+            if (Utils.checkCrossChargesFileFormat(fData.get(0))) {
+
+                LOG.info("FILE FORMAT OK: SENDING RAW DATA...");
+                fData.remove(0);
+                ArrayList<CrossChargesDto> crossChargesDtoList = parseData(fData);
+
+                // new csv file for testing parsing results - start
+                String fileName = "C:\\Users\\ProBook\\Documents\\new docs\\pro doc\\tdb_cross_charges\\rezultat.csv";
+                StringBuilder sb = new StringBuilder();
+
+                for (int i=0; i<crossChargesDtoList.size(); i++) {
+                    CrossChargesDto ccItem = crossChargesDtoList.get(i);
+                    sb.append(ccItem.getNameOfCharge());
+                    sb.append(",");
+                    sb.append(ccItem.getDescription());
+                    sb.append(",");
+                    sb.append(ccItem.getAmount());
+                    sb.append(",");
+                    sb.append(ccItem.getCurrency());
+                    sb.append(",");
+                    sb.append(ccItem.getAccountingDate());
+                    sb.append(",");
+                    sb.append(ccItem.getTransactionDate());
+                    sb.append(",");
+                    sb.append(ccItem.getAccountingTransactionId());
+                    sb.append(",");
+                    sb.append(ccItem.getCategoryCode());
+                    sb.append(",");
+                    sb.append(ccItem.getCostCenterProjId());
+                    sb.append(",");
+                    sb.append(ccItem.getBkRcGl());
+                    sb.append(",");
+                    sb.append(ccItem.getCrossChargeState());
+                    sb.append(",");
+                    sb.append(ccItem.getElementId());
+                    sb.append("\r\n");
+
                 }
+                try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
+                    writer.write(sb.toString());
+                }
+                // parsing test file - end
+
+            } else {
+                allGood = false;
+            }
+
+        } catch (IOException | CsvException e) {
+            LOG.error("PROCES CC ERROR 1: " + e.getMessage());
+            e.printStackTrace();
         }
 
-        return csvList;
+//        System.out.println("REJECTS: " + rejectedList.size());
+
+        response.add(allGood);
+        if (rejectedList.size() > 0) {
+            response.add(rejectedList);
+        }
+        return response;
     }
 
     /**
-     * CSV record parser. Convert a CSV record to a List of Strings representing the fields of the
-     * CSV record. The CSV record is expected to be separated by the specified CSV field separator.
-     * @param record The CSV record.
-     * @param csvSeparator The CSV field separator to be used.
-     * @return A List of Strings representing the fields of each CSV record.
+     * Parse and validate csv data using CustomData collection
+     * @param fileData - raw file data
+     * @return Array of SellinActualDto
      */
-    private static List<String> parseCsvRecord(String record, char csvSeparator) {
+    private ArrayList<CrossChargesDto> parseData(List<String[]> fileData) {
 
-        // Prepare.
-        boolean quoted = false;
-        StringBuilder fieldBuilder = new StringBuilder();
-        List<String> fields = new ArrayList<String>();
+        LOG.info("PROCESS CC: PARSING FETCHED DATA...");
 
-        // Process fields.
-        for (int i = 0; i < record.length(); i++) {
-            char c = record.charAt(i);
-            fieldBuilder.append(c);
+        ArrayList<CrossChargesDto> crossChargesDtos = new ArrayList<>();
+        CustomDataCollection<CrossChargesDto> dataCollection = new CustomDataCollection<CrossChargesDto>(CrossChargesDto.class);
 
-            if (c == '"') {
-                quoted = !quoted; // Detect nested quotes.
-            }
-
-            if ((!quoted && c == csvSeparator) // The separator ..
-                    || i + 1 == record.length()) // .. or, the end of record.
-            {
-                String field = fieldBuilder.toString() // Obtain the field, ..
-                        .replaceAll(csvSeparator + "$", "") // .. trim ending separator, ..
-                        .replaceAll("^\"|\"$", "") // .. trim surrounding quotes, ..
-                        .replace("\"\"", "\""); // .. and un-escape quotes.
-                fields.add(field.trim()); // Add field to List.
-                fieldBuilder = new StringBuilder(); // Reset.
+        // item = row
+        for (String[] item : fileData) {
+            try {
+                Integer rowIndex = fileData.indexOf(item) + 1;
+                ParseMessageDto parseMessage = dataCollection.processData(item, rowIndex);
+                if (parseMessage.getLoadStatus() == Enumerations.ProcessOutcomeStatusEnum.SUCCESSED) {
+                    crossChargesDtos.add(dataCollection.getLastItem());
+                } else {
+                    LOG.error("PROCESS CC ERROR: ROW "+ rowIndex +" REJECTED ");
+                }
+            } catch (SecurityException | IllegalArgumentException e) {
+                LOG.error("PROCES CC ERROR 2: " + e.getMessage());
             }
         }
 
-        return fields;
+        return crossChargesDtos;
+
     }
 }
