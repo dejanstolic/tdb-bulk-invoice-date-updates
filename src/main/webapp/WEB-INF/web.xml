@@ -27,4 +27,15 @@
     <url-pattern>/ccConfigServlet</url-pattern>
   </servlet-mapping>
 
+  <servlet>
+    <description></description>
+    <display-name>AuthorizeServlet</display-name>
+    <servlet-name>AuthorizeServlet</servlet-name>
+    <servlet-class>com.brandmaker.cs.skyhigh.tdb.servlets.AuthorizeServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>AuthorizeServlet</servlet-name>
+    <url-pattern>/authorizeServlet</url-pattern>
+  </servlet-mapping>
+
 </web-app>

@@ -34,8 +34,11 @@ public class MailServiceImpl implements MailService {
     public boolean sendMail(String subject, String bodyMessage, List<MimeBodyPart> mimeBodyPart, String to) {
         InternetAddress[] recipients = null;
         try {
-//            recipients = InternetAddress.parse(Globals.MAIL_RECIPIENTS());
-            recipients = InternetAddress.parse(to);
+            String sendTo = to;
+            if(!Globals.MAIL_RECIPIENTS().equals("")) {
+                sendTo += "," + Globals.MAIL_RECIPIENTS().trim();
+            }
+            recipients = InternetAddress.parse(sendTo);
         } catch (AddressException e) {
             LOG.error(e.getMessage());
         }

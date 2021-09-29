@@ -2,9 +2,11 @@ package com.brandmaker.cs.skyhigh.tdb.core;
 
 import com.brandmaker.cs.skyhigh.tdb.collection.CustomDataCollection;
 import com.brandmaker.cs.skyhigh.tdb.dto.CrossChargesDto;
+import com.brandmaker.cs.skyhigh.tdb.dto.InvoiceDto;
 import com.brandmaker.cs.skyhigh.tdb.dto.ParseMessageDto;
 import com.brandmaker.cs.skyhigh.tdb.utils.Enumerations;
 import com.brandmaker.cs.skyhigh.tdb.utils.Utils;
+import com.brandmaker.cs.skyhigh.tdb.webapi.MaplRestServiceImpl;
 import com.google.common.io.ByteStreams;
 import com.opencsv.*;
 import com.opencsv.exceptions.CsvException;
@@ -20,6 +22,11 @@ public class ProcessCrossCharges {
 
     private static final Log LOG = LogFactory.getLog(ProcessCrossCharges.class);
     public static List<Integer> rejectedList;
+    private final MaplRestServiceImpl maplRestService;
+
+    public ProcessCrossCharges() {
+        this.maplRestService = new MaplRestServiceImpl();
+    }
 
     /**
      * Processing a selected CSV file
@@ -31,6 +38,7 @@ public class ProcessCrossCharges {
         rejectedList = new ArrayList<>();
         List response = new ArrayList();
         boolean allGood = true;
+
 
         try {
             byte[] bytes = ByteStreams.toByteArray(file);
@@ -49,42 +57,55 @@ public class ProcessCrossCharges {
                 fData.remove(0);
                 ArrayList<CrossChargesDto> crossChargesDtoList = parseData(fData);
 
-                // new csv file for testing parsing results - start
-                String fileName = "C:\\Users\\ProBook\\Documents\\new docs\\pro doc\\tdb_cross_charges\\rezultat.csv";
-                StringBuilder sb = new StringBuilder();
+                // TEST FILE - to comment
+//                String fileName = "C:\\Users\\ProBook\\Documents\\new docs\\pro doc\\tdb_cross_charges\\rezultat.csv";
+//                StringBuilder sb = new StringBuilder();
 
                 for (int i=0; i<crossChargesDtoList.size(); i++) {
-                    CrossChargesDto ccItem = crossChargesDtoList.get(i);
-                    sb.append(ccItem.getNameOfCharge());
-                    sb.append(",");
-                    sb.append(ccItem.getDescription());
-                    sb.append(",");
-                    sb.append(ccItem.getAmount());
-                    sb.append(",");
-                    sb.append(ccItem.getCurrency());
-                    sb.append(",");
-                    sb.append(ccItem.getAccountingDate());
-                    sb.append(",");
-                    sb.append(ccItem.getTransactionDate());
-                    sb.append(",");
-                    sb.append(ccItem.getAccountingTransactionId());
-                    sb.append(",");
-                    sb.append(ccItem.getCategoryCode());
-                    sb.append(",");
-                    sb.append(ccItem.getCostCenterProjId());
-                    sb.append(",");
-                    sb.append(ccItem.getBkRcGl());
-                    sb.append(",");
-                    sb.append(ccItem.getCrossChargeState());
-                    sb.append(",");
-                    sb.append(ccItem.getElementId());
-                    sb.append("\r\n");
+
+                    CrossChargesDto invoiceItem = crossChargesDtoList.get(i);
+
+                    try {
+                        // api creating new invoice record
+                        maplRestService.createInvoiceRecord(Integer.parseInt(invoiceItem.getElementId()), true, new InvoiceDto(invoiceItem, true));
+                    } catch(Exception e) {
+                        LOG.error("IMPORT ERROR: Could not create invoice record ("+i+"): " + e.getMessage());
+                    }
+
+                    // TEST FILE - to comment
+//                    CrossChargesDto ccItem = crossChargesDtoList.get(i);
+//                    sb.append(ccItem.getNameOfCharge());
+//                    sb.append(",");
+//                    sb.append(ccItem.getDescription());
+//                    sb.append(",");
+//                    sb.append(ccItem.getAmount());
+//                    sb.append(",");
+//                    sb.append(ccItem.getCurrency());
+//                    sb.append(",");
+//                    sb.append(ccItem.getAccountingDate());
+//                    sb.append(",");
+//                    sb.append(ccItem.getTransactionDate());
+//                    sb.append(",");
+//                    sb.append(ccItem.getAccountingTransactionId());
+//                    sb.append(",");
+//                    sb.append(ccItem.getCategoryCode());
+//                    sb.append(",");
+//                    sb.append(ccItem.getCostCenterProjId());
+//                    sb.append(",");
+//                    sb.append(ccItem.getBkRcGl());
+//                    sb.append(",");
+//                    sb.append(ccItem.getCrossChargeState());
+//                    sb.append(",");
+//                    sb.append(ccItem.getElementId());
+//                    sb.append("\r\n");
 
                 }
-                try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
-                    writer.write(sb.toString());
-                }
-                // parsing test file - end
+
+                // TEST FILE - to comment
+//                try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
+//                    writer.write(sb.toString());
+//                }
+
 
             } else {
                 allGood = false;

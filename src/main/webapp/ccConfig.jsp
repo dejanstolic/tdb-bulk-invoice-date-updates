@@ -7,7 +7,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-    <title>Cross Charges Importer - config page</title>
+    <title>Cross Charges Utility - config page</title>
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/noty.css">
     <script src="js/noty.min.js"></script>
@@ -21,7 +21,7 @@
 %>
 
 <nav class="navbar navbar-dark bg-dark">
-    <a class="navbar-brand" href="#">Cross Charges - Config</a>
+    <a class="navbar-brand" href="#">Cross Charges Utility - Config</a>
     <div>
         <label class="navbar-brand">Version: <%= Globals.GetVersion()%></label>
     </div>

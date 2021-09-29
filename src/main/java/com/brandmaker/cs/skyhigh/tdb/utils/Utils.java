@@ -24,7 +24,9 @@ public class Utils {
 
     public static final SimpleDateFormat logDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-    public static final DateFormat inputFormat = new SimpleDateFormat("dd/MM/yyyy");
+//    public static final DateFormat inputFormat = new SimpleDateFormat("dd/MM/yyyy");
+    public static final DateFormat inputFormat = new SimpleDateFormat("MM/dd/yyyy");
+
 
     private static final DecimalFormat decimalFormat = new DecimalFormat("0.00");
 
@@ -162,9 +164,10 @@ public class Utils {
             LOG.error("FILE FORMAT ERROR: FILE MISSING COLUMN");
         } else {
             int err = 0;
-            List<String> fieldNames = Arrays.asList("name_of_charge", "description", "amount", "currency", "accounting_date", "transaction_date", "accounting_transaction_id", "category_code", "cost_centre_proj_id", "bk_rc_gl", "cross_charge_state", "element_id");
+//            List<String> fieldNames = Arrays.asList("name_of_charge", "description", "amount", "currency", "accounting_date", "transaction_date", "accounting_transaction_id", "category_code", "cost_centre_proj_id", "bk_rc_gl", "cross_charge_state", "element_id");
+            List<String> fieldNames = Arrays.asList("Name of Charge", "Description", "Amount", "Currency", "Accounting Date", "Transaction Date", "Accounting Transaction ID", "Category Code", "Cost Centre / Proj ID", "BK/RC/GL", "Cross Charge State", "Element ID");
             for (String cn : data) {
-                if (!fieldNames.contains(cn)) {
+                if (!fieldNames.contains(cn.trim())) {
                     err++;
                     LOG.error("FILE FORMAT ERROR: NOT VALID COLUMN NAME: " + cn);
                 }

@@ -19,7 +19,6 @@ public class UserHelper {
         final Client client = ClientBuilder.newClient();
         try {
             final ResteasyWebTarget target = (ResteasyWebTarget) client.target(Globals.WEB_API_ROOT());
-
             AuthRestService ars = target.proxy(AuthRestService.class);
             NewCookie jsessiodIdSso = new NewCookie(cookie.getName(), cookie.getValue());
             UserDto userData = ars.getCurrentUser(jsessiodIdSso);
