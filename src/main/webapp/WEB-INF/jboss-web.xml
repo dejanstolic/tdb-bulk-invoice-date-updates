@@ -1,0 +1,3 @@
+<jboss-web>
+    <context-root>tdb-cross-charges</context-root>
+</jboss-web>
